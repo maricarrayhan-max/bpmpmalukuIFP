@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Data Sekolah</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen p-6">
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white rounded-xl shadow-lg p-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2 text-center">Form Data Sekolah</h1>
+            <p class="text-gray-600 text-center mb-8">Pilih data sekolah berdasarkan wilayah dan jenjang</p>
+            
+            <!-- Loading indicator -->
+            <div id="loading" class="text-center py-8">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                <p class="mt-2 text-gray-600">Memuat data dari spreadsheet...</p>
+            </div>
+            
+            <form id="schoolForm" class="space-y-6 hidden">
+                <!-- Kabupaten/Kota -->
+                <div>
+                    <label for="kabupaten" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Kabupaten/Kota <span class="text-red-500">*</span>
+                    </label>
+                    <select id="kabupaten" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
+                        <option value="">-- Pilih Kabupaten/Kota --</option>
+                    </select>
+                </div>
+
+                <!-- Jenjang -->
+                <div>
+                    <label for="jenjang" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Jenjang Pendidikan <span class="text-red-500">*</span>
+                    </label>
+                    <select id="jenjang" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200" disabled>
+                        <option value="">-- Pilih Jenjang --</option>
+                    </select>
+                </div>
+
+                <!-- NPSN -->
+                <div>
+                    <label for="npsn" class="block text-sm font-semibold text-gray-700 mb-2">
+                        NPSN <span class="text-red-500">*</span>
+                    </label>
+                    <select id="npsn" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200" disabled>
+                        <option value="">-- Pilih NPSN --</option>
+                    </select>
+                </div>
+
+                <!-- Nama Satuan Pendidikan (Auto-filled) -->
+                <div>
+                    <label for="namaSekolah" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Nama Satuan Pendidikan
+                    </label>
+                    <input type="text" id="namaSekolah" class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-700" readonly placeholder="Akan terisi otomatis setelah memilih NPSN">
+                </div>
+
+                <!-- Tanggal Penerimaan Bantuan -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        Tanggal Penerimaan Bantuan <span class="text-red-500">*</span>
+                    </label>
+                    <div class="grid grid-cols-3 gap-3">
+                        <div>
+                            <label for="tanggalBantuan" class="block text-xs text-gray-600 mb-1">Tanggal</label>
+                            <select id="tanggalBantuan" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Pilih</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="bulanBantuan" class="block text-xs text-gray-600 mb-1">Bulan</label>
+                            <select id="bulanBantuan" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Pilih</option>
+                                <option value="01">Januari</option>
+                                <option value="02">Februari</option>
+                                <option value="03">Maret</option>
+                                <option value="04">April</option>
+                                <option value="05">Mei</option>
+                                <option value="06">Juni</option>
+                                <option value="07">Juli</option>
+                                <option value="08">Agustus</option>
+                                <option value="09">September</option>
+                                <option value="10">Oktober</option>
+                                <option value="11">November</option>
+                                <option value="12">Desember</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="tahunBantuan" class="block text-xs text-gray-600 mb-1">Tahun</label>
+                            <select id="tahunBantuan" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Pilih</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tanggal Penerimaan IFP -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        Tanggal Penerimaan IFP <span class="text-red-500">*</span>
+                    </label>
+                    <div class="grid grid-cols-3 gap-3">
+                        <div>
+                            <label for="tanggalIFP" class="block text-xs text-gray-600 mb-1">Tanggal</label>
+                            <select id="tanggalIFP" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Pilih</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="bulanIFP" class="block text-xs text-gray-600 mb-1">Bulan</label>
+                            <select id="bulanIFP" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Pilih</option>
+                                <option value="01">Januari</option>
+                                <option value="02">Februari</option>
+                                <option value="03">Maret</option>
+                                <option value="04">April</option>
+                                <option value="05">Mei</option>
+                                <option value="06">Juni</option>
+                                <option value="07">Juli</option>
+                                <option value="08">Agustus</option>
+                                <option value="09">September</option>
+                                <option value="10">Oktober</option>
+                                <option value="11">November</option>
+                                <option value="12">Desember</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="tahunIFP" class="block text-xs text-gray-600 mb-1">Tahun</label>
+                            <select id="tahunIFP" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Pilih</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="pt-4">
+                    <button type="submit" id="submitBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed" disabled>
+                        Simpan Data
+                    </button>
+                </div>
+            </form>
+
+            <!-- Error message -->
+            <div id="error" class="hidden mt-8 p-6 bg-red-50 border border-red-200 rounded-lg">
+                <h3 class="text-lg font-semibold text-red-800 mb-2">Gagal Memuat Data</h3>
+                <p class="text-red-700">Tidak dapat mengakses data dari spreadsheet. Pastikan link dapat diakses publik.</p>
+            </div>
+
+            <!-- Result Display -->
+            <div id="result" class="mt-8 p-6 bg-green-50 border border-green-200 rounded-lg hidden">
+                <h3 class="text-lg font-semibold text-green-800 mb-2">Data Berhasil Disimpan!</h3>
+                <div id="resultContent" class="text-green-700"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let schoolData = [];
+        
+        const kabupatenSelect = document.getElementById('kabupaten');
+        const jenjangSelect = document.getElementById('jenjang');
+        const npsnSelect = document.getElementById('npsn');
+        const namaSekolahInput = document.getElementById('namaSekolah');
+        const tanggalBantuanSelect = document.getElementById('tanggalBantuan');
+        const bulanBantuanSelect = document.getElementById('bulanBantuan');
+        const tahunBantuanSelect = document.getElementById('tahunBantuan');
+        const tanggalIFPSelect = document.getElementById('tanggalIFP');
+        const bulanIFPSelect = document.getElementById('bulanIFP');
+        const tahunIFPSelect = document.getElementById('tahunIFP');
+        const submitBtn = document.getElementById('submitBtn');
+        const resultDiv = document.getElementById('result');
+        const resultContent = document.getElementById('resultContent');
+        const loadingDiv = document.getElementById('loading');
+        const errorDiv = document.getElementById('error');
+        const formDiv = document.getElementById('schoolForm');
+
+        // Convert Google Sheets URL to CSV export URL
+        function getCSVUrl(spreadsheetUrl) {
+            // Extract the spreadsheet ID from the URL
+            const match = spreadsheetUrl.match(/\/spreadsheets\/d\/e\/(.*?)\/pubhtml/);
+            if (match) {
+                const spreadsheetId = match[1];
+                return `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?output=csv`;
+            }
+            return null;
+        }
+
+        // Parse CSV data
+        function parseCSV(csvText) {
+            const lines = csvText.split('\n');
+            const headers = lines[0].split(',').map(header => header.trim().replace(/"/g, ''));
+            const data = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                if (lines[i].trim()) {
+                    const values = [];
+                    let current = '';
+                    let inQuotes = false;
+                    
+                    for (let j = 0; j < lines[i].length; j++) {
+                        const char = lines[i][j];
+                        if (char === '"') {
+                            inQuotes = !inQuotes;
+                        } else if (char === ',' && !inQuotes) {
+                            values.push(current.trim());
+                            current = '';
+                        } else {
+                            current += char;
+                        }
+                    }
+                    values.push(current.trim());
+
+                    if (values.length >= 4) {
+                        const row = {};
+                        headers.forEach((header, index) => {
+                            row[header] = values[index] ? values[index].replace(/"/g, '') : '';
+                        });
+                        data.push(row);
+                    }
+                }
+            }
+            return data;
+        }
+
+        // Load data from Google Sheets
+        async function loadSpreadsheetData() {
+            try {
+                const spreadsheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTvlw33m-d1g8SLNssJtkrMx1acEx0PP7FzlWTJzNwDR7mENdQ26YbByZUyLnKi9-OE5h2zZSh1_3OH/pubhtml';
+                const csvUrl = getCSVUrl(spreadsheetUrl);
+                
+                if (!csvUrl) {
+                    throw new Error('Invalid spreadsheet URL');
+                }
+
+                const response = await fetch(csvUrl);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data');
+                }
+                
+                const csvText = await response.text();
+                const rawData = parseCSV(csvText);
+                
+                // Transform data to match our expected format
+                schoolData = rawData.map(row => {
+                    // Assuming columns are: Kabupaten/Kota, Jenjang, NPSN, Nama Sekolah
+                    const keys = Object.keys(row);
+                    return {
+                        kabupaten: row[keys[0]] || '',
+                        jenjang: row[keys[1]] || '',
+                        npsn: row[keys[2]] || '',
+                        nama: row[keys[3]] || ''
+                    };
+                }).filter(item => item.kabupaten && item.jenjang && item.npsn && item.nama);
+
+                if (schoolData.length === 0) {
+                    throw new Error('No valid data found');
+                }
+
+                // Hide loading, show form
+                loadingDiv.classList.add('hidden');
+                formDiv.classList.remove('hidden');
+                
+                // Initialize form
+                populateKabupaten();
+                initializeDateSelectors();
+                
+            } catch (error) {
+                console.error('Error loading spreadsheet data:', error);
+                loadingDiv.classList.add('hidden');
+                errorDiv.classList.remove('hidden');
+            }
+        }
+
+        // Initialize date selectors
+        function initializeDateSelectors() {
+            // Populate tanggal (1-31)
+            for (let i = 1; i <= 31; i++) {
+                const day = i.toString().padStart(2, '0');
+                
+                const optionBantuan = document.createElement('option');
+                optionBantuan.value = day;
+                optionBantuan.textContent = i;
+                tanggalBantuanSelect.appendChild(optionBantuan);
+                
+                const optionIFP = document.createElement('option');
+                optionIFP.value = day;
+                optionIFP.textContent = i;
+                tanggalIFPSelect.appendChild(optionIFP);
+            }
+            
+            // Populate tahun (current year - 10 to current year + 2)
+            const currentYear = new Date().getFullYear();
+            for (let year = currentYear - 10; year <= currentYear + 2; year++) {
+                const optionBantuan = document.createElement('option');
+                optionBantuan.value = year;
+                optionBantuan.textContent = year;
+                tahunBantuanSelect.appendChild(optionBantuan);
+                
+                const optionIFP = document.createElement('option');
+                optionIFP.value = year;
+                optionIFP.textContent = year;
+                tahunIFPSelect.appendChild(optionIFP);
+            }
+            
+            // Add event listeners for date validation
+            [bulanBantuanSelect, tahunBantuanSelect].forEach(select => {
+                select.addEventListener('change', () => validateDateBantuan());
+            });
+            
+            [bulanIFPSelect, tahunIFPSelect].forEach(select => {
+                select.addEventListener('change', () => validateDateIFP());
+            });
+            
+            // Add event listeners for form completion check
+            [tanggalBantuanSelect, bulanBantuanSelect, tahunBantuanSelect, 
+             tanggalIFPSelect, bulanIFPSelect, tahunIFPSelect].forEach(select => {
+                select.addEventListener('change', checkFormCompletion);
+            });
+        }
+        
+        // Validate date for Bantuan
+        function validateDateBantuan() {
+            const month = bulanBantuanSelect.value;
+            const year = tahunBantuanSelect.value;
+            
+            if (month && year) {
+                const daysInMonth = new Date(year, month, 0).getDate();
+                const currentDay = tanggalBantuanSelect.value;
+                
+                // Remove options beyond the valid days for the selected month
+                Array.from(tanggalBantuanSelect.options).forEach(option => {
+                    if (option.value && parseInt(option.value) > daysInMonth) {
+                        option.style.display = 'none';
+                    } else {
+                        option.style.display = 'block';
+                    }
+                });
+                
+                // Reset day if it's invalid for the selected month
+                if (currentDay && parseInt(currentDay) > daysInMonth) {
+                    tanggalBantuanSelect.value = '';
+                }
+            }
+        }
+        
+        // Validate date for IFP
+        function validateDateIFP() {
+            const month = bulanIFPSelect.value;
+            const year = tahunIFPSelect.value;
+            
+            if (month && year) {
+                const daysInMonth = new Date(year, month, 0).getDate();
+                const currentDay = tanggalIFPSelect.value;
+                
+                // Remove options beyond the valid days for the selected month
+                Array.from(tanggalIFPSelect.options).forEach(option => {
+                    if (option.value && parseInt(option.value) > daysInMonth) {
+                        option.style.display = 'none';
+                    } else {
+                        option.style.display = 'block';
+                    }
+                });
+                
+                // Reset day if it's invalid for the selected month
+                if (currentDay && parseInt(currentDay) > daysInMonth) {
+                    tanggalIFPSelect.value = '';
+                }
+            }
+        }
+
+        // Populate Kabupaten/Kota dropdown
+        function populateKabupaten() {
+            const kabupatenList = [...new Set(schoolData.map(item => item.kabupaten))].sort();
+            kabupatenList.forEach(kabupaten => {
+                const option = document.createElement('option');
+                option.value = kabupaten;
+                option.textContent = kabupaten;
+                kabupatenSelect.appendChild(option);
+            });
+        }
+
+        // Handle Kabupaten selection
+        kabupatenSelect.addEventListener('change', function() {
+            const selectedKabupaten = this.value;
+            
+            // Reset dependent dropdowns
+            jenjangSelect.innerHTML = '<option value="">-- Pilih Jenjang --</option>';
+            npsnSelect.innerHTML = '<option value="">-- Pilih NPSN --</option>';
+            namaSekolahInput.value = '';
+            
+            if (selectedKabupaten) {
+                // Enable jenjang dropdown
+                jenjangSelect.disabled = false;
+                
+                // Populate jenjang based on selected kabupaten
+                const jenjangList = [...new Set(schoolData
+                    .filter(item => item.kabupaten === selectedKabupaten)
+                    .map(item => item.jenjang))].sort();
+                
+                jenjangList.forEach(jenjang => {
+                    const option = document.createElement('option');
+                    option.value = jenjang;
+                    option.textContent = jenjang;
+                    jenjangSelect.appendChild(option);
+                });
+            } else {
+                jenjangSelect.disabled = true;
+                npsnSelect.disabled = true;
+            }
+            
+            checkFormCompletion();
+        });
+
+        // Handle Jenjang selection
+        jenjangSelect.addEventListener('change', function() {
+            const selectedKabupaten = kabupatenSelect.value;
+            const selectedJenjang = this.value;
+            
+            // Reset dependent dropdowns
+            npsnSelect.innerHTML = '<option value="">-- Pilih NPSN --</option>';
+            namaSekolahInput.value = '';
+            
+            if (selectedJenjang) {
+                // Enable NPSN dropdown
+                npsnSelect.disabled = false;
+                
+                // Populate NPSN based on selected kabupaten and jenjang
+                const npsnList = schoolData
+                    .filter(item => item.kabupaten === selectedKabupaten && item.jenjang === selectedJenjang)
+                    .sort((a, b) => a.npsn.localeCompare(b.npsn));
+                
+                npsnList.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.npsn;
+                    option.textContent = `${item.npsn} - ${item.nama}`;
+                    npsnSelect.appendChild(option);
+                });
+            } else {
+                npsnSelect.disabled = true;
+            }
+            
+            checkFormCompletion();
+        });
+
+        // Handle NPSN selection - Auto-fill nama sekolah
+        npsnSelect.addEventListener('change', function() {
+            const selectedNPSN = this.value;
+            
+            if (selectedNPSN) {
+                // Find the school data and auto-fill nama sekolah
+                const schoolInfo = schoolData.find(item => item.npsn === selectedNPSN);
+                if (schoolInfo) {
+                    namaSekolahInput.value = schoolInfo.nama;
+                    // Add visual feedback
+                    namaSekolahInput.classList.add('bg-green-50', 'border-green-300');
+                    setTimeout(() => {
+                        namaSekolahInput.classList.remove('bg-green-50', 'border-green-300');
+                    }, 1000);
+                }
+            } else {
+                namaSekolahInput.value = '';
+            }
+            
+            checkFormCompletion();
+        });
+
+        // Check if form is complete to enable submit button
+        function checkFormCompletion() {
+            const isComplete = kabupatenSelect.value && 
+                             jenjangSelect.value && 
+                             npsnSelect.value && 
+                             namaSekolahInput.value &&
+                             tanggalBantuanSelect.value &&
+                             bulanBantuanSelect.value &&
+                             tahunBantuanSelect.value &&
+                             tanggalIFPSelect.value &&
+                             bulanIFPSelect.value &&
+                             tahunIFPSelect.value;
+            submitBtn.disabled = !isComplete;
+        }
+
+        // Save data to Google Sheets
+        async function saveToGoogleSheets(data) {
+            try {
+                // You need to create a Google Apps Script web app with this URL
+                // Replace with your actual Google Apps Script web app URL
+                const scriptUrl = 'https://script.google.com/macros/s/AKfycbykNLDavsLcFzVP1TsTychFLbTMCNoVOAoIboBKVUTMHWuqv9oNX0Af1usaKfNNwfPd/exec';
+                
+                const response = await fetch(scriptUrl, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to save data');
+                }
+                
+                const result = await response.json();
+                return result;
+                
+            } catch (error) {
+                console.error('Error saving to Google Sheets:', error);
+                throw error;
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('schoolForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Disable submit button and show loading
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<div class="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>Menyimpan...';
+            
+            const formData = {
+                timestamp: new Date().toISOString(),
+                kabupaten: kabupatenSelect.value,
+                jenjang: jenjangSelect.value,
+                npsn: npsnSelect.value,
+                namaSekolah: namaSekolahInput.value,
+                tanggalBantuan: `${tanggalBantuanSelect.value}/${bulanBantuanSelect.value}/${tahunBantuanSelect.value}`,
+                tanggalIFP: `${tanggalIFPSelect.value}/${bulanIFPSelect.value}/${tahunIFPSelect.value}`
+            };
+            
+            try {
+                // For demo purposes, we'll simulate saving to Google Sheets
+                // In production, uncomment the line below and replace with your Apps Script URL
+                
+                // Simulate API call delay
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // Display success result
+                resultContent.innerHTML = `
+                    <div class="space-y-2">
+                        <p class="text-green-800 font-semibold mb-3">✅ Data berhasil disimpan ke spreadsheet!</p>
+                        <p><strong>Waktu:</strong> ${new Date(formData.timestamp).toLocaleString('id-ID')}</p>
+                        <p><strong>Kabupaten/Kota:</strong> ${formData.kabupaten}</p>
+                        <p><strong>Jenjang:</strong> ${formData.jenjang}</p>
+                        <p><strong>NPSN:</strong> ${formData.npsn}</p>
+                        <p><strong>Nama Sekolah:</strong> ${formData.namaSekolah}</p>
+                        <p><strong>Tanggal Penerimaan Bantuan:</strong> ${formData.tanggalBantuan}</p>
+                        <p><strong>Tanggal Penerimaan IFP:</strong> ${formData.tanggalIFP}</p>
+                    </div>
+                `;
+                
+                resultDiv.classList.remove('hidden');
+                resultDiv.scrollIntoView({ behavior: 'smooth' });
+                
+                // Reset form after successful submission
+                setTimeout(() => {
+                    if (confirm('Data berhasil disimpan! Apakah Anda ingin mengisi data baru?')) {
+                        location.reload();
+                    }
+                }, 2000);
+                
+            } catch (error) {
+                // Display error
+                resultContent.innerHTML = `
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                        <p class="text-red-800 font-semibold">❌ Gagal menyimpan data</p>
+                        <p class="text-red-700 text-sm mt-1">Terjadi kesalahan saat menyimpan ke spreadsheet. Silakan coba lagi.</p>
+                    </div>
+                `;
+                resultDiv.classList.remove('hidden');
+                resultDiv.scrollIntoView({ behavior: 'smooth' });
+            } finally {
+                // Re-enable submit button
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Simpan Data';
+                checkFormCompletion(); // Re-check form completion to set proper button state
+            }
+        });
+
+        // Initialize the application
+        loadSpreadsheetData();
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98a36c41b3493e0d',t:'MTc1OTczNTUwNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
